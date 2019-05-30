@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import './demo/bottom_navigation_bar_demo.dart';
+import './demo/listview_demo.dart';
 
 void main() => runApp(MyApp());
 
@@ -6,93 +9,110 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      home: Home(),
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+          primarySwatch: Colors.deepOrange,
+          highlightColor: Color.fromRGBO(255, 255, 255, 0.5),
+          splashColor: Colors.white70),
     );
   }
 }
 
-class Home extends StatelessWidget 
-{
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+          // leading: IconButton(
+          //   icon: Icon(Icons.menu),
+          //   tooltip: 'Navigation',
+          //   onPressed: ()=>debugPrint('Navigation button pressed'),
+          // ),
+          title: Text('Example'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search),
+              tooltip: 'Navigation',
+              onPressed: () => debugPrint('Search button pressed'),
             ),
           ],
+          elevation: 0.0,
+          bottom: TabBar(
+            unselectedLabelColor: Colors.black38,
+            indicatorColor: Colors.black54,
+            indicatorSize: TabBarIndicatorSize.label,
+            indicatorWeight: 1.0,
+            tabs: <Widget>[
+              Tab(icon: Icon(Icons.local_florist)),
+              Tab(icon: Icon(Icons.change_history)),
+              Tab(icon: Icon(Icons.directions_bike)),
+            ],
+          ),
         ),
+        body: TabBarView(
+          children: <Widget>[
+            ListViewDemo(),
+            Icon(Icons.change_history, size: 128.0, color: Colors.black12),
+            Icon(Icons.directions_bike, size: 128.0, color: Colors.black12),
+          ],
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      'https://resources.ninghao.org/images/wanghao.jpg'),
+                ),
+                accountName: Text('Kevin',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                accountEmail: Text('kevin@qq.com'),
+                decoration: BoxDecoration(
+                    color: Colors.yellow[400],
+                    image: DecorationImage(
+                        image: NetworkImage(
+                            'https://resources.ninghao.org/images/childhood-in-a-picture.jpg'),
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                            Colors.yellow[400].withOpacity(0.6),
+                            BlendMode.hardLight))),
+              ),
+              ListTile(
+                  title: Text('Messgae', textAlign: TextAlign.right),
+                  trailing: Icon(
+                    Icons.message,
+                    color: Colors.black12,
+                    size: 22.0,
+                  ),
+                  onTap: () => Navigator.pop(context)),
+              ListTile(
+                title: Text('Favorite', textAlign: TextAlign.right),
+                trailing: Icon(
+                  Icons.favorite,
+                  color: Colors.black12,
+                  size: 22.0,
+                ),
+                onTap: () => Navigator.pop(context),
+              ),
+              ListTile(
+                title: Text('Setting', textAlign: TextAlign.right),
+                trailing: Icon(
+                  Icons.settings,
+                  color: Colors.black12,
+                  size: 22.0,
+                ),
+                onTap: () => Navigator.pop(context),
+              )
+            ],
+          ),
+        ),
+        bottomNavigationBar: BottomNavigationBarDemo(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
